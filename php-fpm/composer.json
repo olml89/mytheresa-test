@@ -1,0 +1,18 @@
+{
+    "name": "olml89/mytheresa-test",
+    "description": "Implementation of a technical test for a senior developer role at Mytheresa",
+    "authors": [
+        {
+            "name": "olml89"
+        }
+    ],
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "olml89\\MytheresaTest\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {}
+}
