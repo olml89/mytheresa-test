@@ -10,9 +10,25 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "olml89\\MytheresaTest\\": "src/"
+            "olml89\\MyTheresaTest\\": "src/"
         }
     },
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "php": "^8.4",
+        "ext-dom": "*",
+        "doctrine/orm": "^3.5",
+        "doctrine/migrations": "^3.9",
+        "php-di/php-di": "^7.0",
+        "vlucas/phpdotenv": "^5.6",
+        "symfony/cache": "^7.3",
+        "symfony/console": "^7.3",
+        "nikic/php-parser": "^5.5"
+    },
+    "require-dev": {
+        "doctrine/data-fixtures": "^2.0",
+        "fakerphp/faker": "^1.24",
+        "phpstan/phpstan": "^2.1",
+        "laravel/pint": "^1.24"
+    }
 }

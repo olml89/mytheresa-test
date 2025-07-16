@@ -71,3 +71,27 @@ php-fpm:
 
 postgres:
 	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -e PGPASSWORD=$(DB_PASSWORD) postgres psql -U $(DB_USER) -d $(DB_NAME)
+
+
+# Development
+.PHONY: phpstan pint
+
+phpstan:
+	$(eval ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS)))
+	$(eval CI :=)
+	$(foreach arg,$(ARGS),\
+		$(if $(filter ci,$(arg)),\
+			$(eval CI := --no-progress)))
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm vendor/bin/phpstan --ansi --configuration=phpstan.neon $(CI)
+
+pint:
+	$(eval ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS)))
+	$(eval CI :=)
+	$(foreach arg,$(ARGS),\
+		$(if $(filter ci,$(arg)),\
+			$(eval CI := --test)))
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm vendor/bin/pint --ansi --config=pint.json $(CI)
+
+# Catch-all pattern rule to prevent Make from complaining about unknown targets
+%:
+	@:
