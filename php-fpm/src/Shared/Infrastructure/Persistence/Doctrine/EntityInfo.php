@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use DOMDocument;
 use DOMElement;
@@ -18,7 +18,7 @@ final readonly class EntityInfo
     private string $dirname;
     private string $baseNamespace;
 
-    public function __construct(string $name, string $dirname, string $baseNamespace)
+    private function __construct(string $name, string $dirname, string $baseNamespace)
     {
         $this->name = $name;
         $this->dirname = $dirname;
@@ -45,7 +45,7 @@ final readonly class EntityInfo
          * Get the namespace from the .orm.xml
          */
         $doc = new DOMDocument();
-        $doc->load($file->getPathName());
+        $doc->load($file->getPathname());
 
         $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('d', 'https://doctrine-project.org/schemas/orm/doctrine-mapping');
@@ -66,7 +66,7 @@ final readonly class EntityInfo
          * base namespace: olml89\MyTheresa\Product\Domain
          */
         $namespace = $entityNode->getAttribute(qualifiedName: 'name');
-        $baseNamespace = substr($namespace, offset: 0, length: strrpos($namespace, needle: '\\'));
+        $baseNamespace = substr($namespace, offset: 0, length: strrpos($namespace, needle: '\\') ?: null);
 
         return new self($name, $dirname, $baseNamespace);
     }

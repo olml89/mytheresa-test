@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
+/**
+ * @template-extends IteratorIterator<string, FixtureInfo, RecursiveIteratorIterator<RecursiveDirectoryIterator>>
+ * @implements OuterIterator<string, FixtureInfo>
+ */
 final class FixtureIterator extends IteratorIterator implements OuterIterator
 {
+    /**
+     * @var RecursiveIteratorIterator<RecursiveDirectoryIterator>
+     */
     private readonly RecursiveIteratorIterator $innerIterator;
     private readonly EntityInfo $entityInfo;
 
@@ -32,6 +40,7 @@ final class FixtureIterator extends IteratorIterator implements OuterIterator
     public function valid(): bool
     {
         while ($this->innerIterator->valid()) {
+            /** @var SplFileInfo $file */
             $file = $this->innerIterator->current();
 
             if (!is_null(FixtureInfo::create($file))) {
@@ -44,14 +53,18 @@ final class FixtureIterator extends IteratorIterator implements OuterIterator
         return false;
     }
 
-    public function key(): int
+    public function key(): string
     {
+        /** @var string */
         return $this->innerIterator->key();
     }
 
-    public function current(): FixtureInfo
+    public function current(): ?FixtureInfo
     {
-        return FixtureInfo::create($this->innerIterator->current());
+        /** @var SplFileInfo $current $current */
+        $current = $this->innerIterator->current();
+
+        return FixtureInfo::create($current);
     }
 
     public function rewind(): void

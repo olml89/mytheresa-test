@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\Common\DataFixtures\SharedFixtureInterface;
 use olml89\MyTheresaTest\Shared\Infrastructure\ItGetsFullQualifiedClassName;
@@ -28,7 +28,7 @@ final readonly class FixtureInfo
 
         $className = self::getFullQualifiedClassName($file->getRealPath());
 
-        if (!class_exists($className)) {
+        if (is_null($className) || !class_exists($className)) {
             return null;
         }
 

@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
+/**
+ * @template-extends IteratorIterator<string, TypeInfo, RecursiveIteratorIterator<RecursiveDirectoryIterator>>
+ * @implements OuterIterator<string, TypeInfo>
+ */
 final class TypeIterator extends IteratorIterator implements OuterIterator
 {
+    /**
+     * @var RecursiveIteratorIterator<RecursiveDirectoryIterator>
+     */
     private readonly RecursiveIteratorIterator $innerIterator;
 
     public function __construct(string $baseDir)
@@ -25,6 +33,7 @@ final class TypeIterator extends IteratorIterator implements OuterIterator
     public function valid(): bool
     {
         while ($this->innerIterator->valid()) {
+            /** @var SplFileInfo $file */
             $file = $this->innerIterator->current();
 
             if (!is_null(TypeInfo::create($file))) {
@@ -39,12 +48,16 @@ final class TypeIterator extends IteratorIterator implements OuterIterator
 
     public function key(): string
     {
+        /** @var string */
         return $this->innerIterator->key();
     }
 
-    public function current(): TypeInfo
+    public function current(): ?TypeInfo
     {
-        return TypeInfo::create($this->innerIterator->current());
+        /** @var SplFileInfo $current $current */
+        $current = $this->innerIterator->current();
+
+        return TypeInfo::create($current);
     }
 
     public function rewind(): void

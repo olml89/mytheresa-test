@@ -13,9 +13,16 @@ trait ItGetsFullQualifiedClassName
 {
     private static function getFullQualifiedClassName(string $path): ?string
     {
-        $code = file_get_contents($path);
+        if (is_null($code = file_get_contents($path) ?: null)) {
+            return null;
+        }
+
         $parser = new ParserFactory()->createForNewestSupportedVersion();
         $ast = $parser->parse($code);
+
+        if (is_null($ast)) {
+            return null;
+        }
 
         $traverser = new NodeTraverser();
 
@@ -23,7 +30,7 @@ trait ItGetsFullQualifiedClassName
             public ?string $namespace = null;
             public ?string $className = null;
 
-            public function enterNode(Node $node): void
+            public function enterNode(Node $node): null
             {
                 if ($node instanceof Node\Stmt\Namespace_) {
                     $this->namespace = $node->name?->toString();
@@ -32,6 +39,8 @@ trait ItGetsFullQualifiedClassName
                 if ($node instanceof Node\Stmt\Class_ && isset($node->name)) {
                     $this->className = $node->name->toString();
                 }
+
+                return null;
             }
         };
 

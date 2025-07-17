@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\DBAL\Types\Type;
 use olml89\MyTheresaTest\Shared\Infrastructure\ItGetsFullQualifiedClassName;
@@ -15,6 +15,10 @@ final readonly class TypeInfo
 
     private function __construct(
         private string $name,
+
+        /**
+         * @var class-string<Type>
+         */
         private string $fullQualifiedClassName,
     ) {
     }
@@ -41,6 +45,9 @@ final readonly class TypeInfo
         return $this->name;
     }
 
+    /**
+     * @return class-string<Type>
+     */
     public function fullQualifiedClassName(): string
     {
         return $this->fullQualifiedClassName;

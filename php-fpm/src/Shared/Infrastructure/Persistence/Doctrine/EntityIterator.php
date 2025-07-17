@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SplFileInfo;
 
+/**
+ * @template-extends IteratorIterator<string, EntityInfo, RecursiveIteratorIterator<RecursiveDirectoryIterator>>
+ * @implements OuterIterator<string, EntityInfo>
+ */
 final class EntityIterator extends IteratorIterator implements OuterIterator
 {
+    /**
+     * @var RecursiveIteratorIterator<RecursiveDirectoryIterator>
+     */
     private readonly RecursiveIteratorIterator $innerIterator;
 
     public function __construct(string $baseDir)
@@ -22,14 +30,10 @@ final class EntityIterator extends IteratorIterator implements OuterIterator
         parent::__construct($this->innerIterator);
     }
 
-    public function getInnerIterator(): RecursiveIteratorIterator
-    {
-        return $this->innerIterator;
-    }
-
     public function valid(): bool
     {
         while ($this->innerIterator->valid()) {
+            /** @var SplFileInfo $file */
             $file = $this->innerIterator->current();
 
             if (!is_null(EntityInfo::create($file))) {
@@ -44,12 +48,16 @@ final class EntityIterator extends IteratorIterator implements OuterIterator
 
     public function key(): string
     {
+        /** @var string */
         return $this->innerIterator->key();
     }
 
-    public function current(): EntityInfo
+    public function current(): ?EntityInfo
     {
-        return EntityInfo::create($this->innerIterator->current());
+        /** @var SplFileInfo $current $current */
+        $current = $this->innerIterator->current();
+
+        return EntityInfo::create($current);
     }
 
     public function rewind(): void

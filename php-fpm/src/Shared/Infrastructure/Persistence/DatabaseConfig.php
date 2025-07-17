@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence;
 
 final readonly class DatabaseConfig
 {

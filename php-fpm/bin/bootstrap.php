@@ -5,29 +5,42 @@ declare(strict_types=1);
 use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Dotenv\Dotenv;
-use olml89\MyTheresaTest\Shared\Infrastructure\DatabaseConfig;
-use olml89\MyTheresaTest\Shared\Infrastructure\Doctrine\EntityManagerProvider;
+use olml89\MyTheresaTest\Shared\Domain\ApplicationContext;
+use olml89\MyTheresaTest\Shared\Domain\Environment;
+use olml89\MyTheresaTest\Shared\Domain\EnvironmentLoader;
+use olml89\MyTheresaTest\Shared\Infrastructure\Environment\PhpdotenvEnvironmentLoader;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\DatabaseConfig;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine\EntityManagerProvider;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-// @TODO: don't directly use phpdotenv here
-$dotEnv = DotEnv::createImmutable(dirname(__DIR__));
-$dotEnv->load();
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->useAutowiring(true);
 
 $containerBuilder->addDefinitions([
 
-    DatabaseConfig::class => DI\factory(function (): DatabaseConfig {
-        // @TODO: don't directly access $_ENV here
+    EnvironmentLoader::class => DI\autowire(PhpdotenvEnvironmentLoader::class),
+
+    ApplicationContext::class => DI\factory(function (Container $c): ApplicationContext {
+        /** @var EnvironmentLoader $environmentLoader */
+        $environmentLoader = $c->get(EnvironmentLoader::class);
+
+        return new ApplicationContext(
+            environment: Environment::tryFrom($environmentLoader->string('APP_ENV')) ?? Environment::Production,
+            rootDir: dirname(__DIR__),
+        );
+    }),
+
+    DatabaseConfig::class => DI\factory(function (Container $c): DatabaseConfig {
+        /** @var EnvironmentLoader $environmentLoader */
+        $environmentLoader = $c->get(EnvironmentLoader::class);
+
         return new DatabaseConfig(
-            host: $_ENV['DB_HOST'],
-            port: (int)$_ENV['DB_PORT'],
-            database: $_ENV['DB_NAME'],
-            username: $_ENV['DB_USER'],
-            password: $_ENV['DB_PASSWORD'],
+            host: $environmentLoader->string('DB_HOST'),
+            port: $environmentLoader->int('DB_PORT'),
+            database: $environmentLoader->string('DB_NAME'),
+            username: $environmentLoader->string('DB_USER'),
+            password: $environmentLoader->string('DB_PASSWORD'),
         );
     }),
 
@@ -40,4 +53,10 @@ $containerBuilder->addDefinitions([
 
 ]);
 
-return $containerBuilder->build();
+$container = $containerBuilder->build();
+
+/** @var EnvironmentLoader $environmentLoader */
+$environmentLoader = $container->get(EnvironmentLoader::class);
+$environmentLoader->load(dirname(__DIR__));
+
+return $container;

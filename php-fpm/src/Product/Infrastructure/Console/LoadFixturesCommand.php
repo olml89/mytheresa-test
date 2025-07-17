@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace olml89\MyTheresaTest\Product\Infrastructure\Console;
 
-use olml89\MyTheresaTest\Shared\Infrastructure\Doctrine\EntityIterator;
-use olml89\MyTheresaTest\Shared\Infrastructure\Doctrine\FixtureIterator;
-use olml89\MyTheresaTest\Shared\Infrastructure\Doctrine\FixtureLoader;
+use olml89\MyTheresaTest\Shared\Domain\ApplicationContext;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine\EntityIterator;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine\FixtureIterator;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine\FixtureLoader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,6 +17,7 @@ final class LoadFixturesCommand extends Command
     protected static string $defaultName = 'load:fixtures';
 
     public function __construct(
+        private readonly ApplicationContext $applicationContext,
         private readonly FixtureLoader $fixtureLoader,
     ) {
         parent::__construct(self::$defaultName);
@@ -28,8 +30,7 @@ final class LoadFixturesCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        // @TODO: don't hardcode this
-        $entityIterator = new EntityIterator(dirname(__DIR__, levels: 4));
+        $entityIterator = new EntityIterator($this->applicationContext->rootDir);
         $output->writeln('🔧 Loading entity data fixtures...');
         $loadedFixtures = 0;
 

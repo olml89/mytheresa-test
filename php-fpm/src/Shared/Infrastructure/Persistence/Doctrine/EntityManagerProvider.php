@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace olml89\MyTheresaTest\Shared\Infrastructure\Doctrine;
+namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
@@ -12,11 +12,13 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
-use olml89\MyTheresaTest\Shared\Infrastructure\DatabaseConfig;
+use olml89\MyTheresaTest\Shared\Domain\ApplicationContext;
+use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\DatabaseConfig;
 
 final readonly class EntityManagerProvider
 {
     public function __construct(
+        private ApplicationContext $applicationContext,
         private DatabaseConfig $databaseConfig,
     ) {
     }
@@ -27,13 +29,10 @@ final readonly class EntityManagerProvider
      */
     public function provide(): EntityManagerInterface
     {
-        // @TODO: don't hardcode this
-        $rootDir = dirname(__DIR__, levels: 4);
-
         /**
          * Add custom types
          */
-        $typeIterator = new TypeIterator($rootDir . '/src');
+        $typeIterator = new TypeIterator($this->applicationContext->rootDir . '/src');
 
         foreach ($typeIterator as $typeInfo) {
             if (!Type::hasType($typeInfo->name())) {
@@ -44,7 +43,7 @@ final readonly class EntityManagerProvider
         /**
          * Add entity mappings
          */
-        $entityIterator = new EntityIterator($rootDir . '/src');
+        $entityIterator = new EntityIterator($this->applicationContext->rootDir . '/src');
         $namespaces = [];
 
         foreach ($entityIterator as $entityInfo) {
@@ -59,7 +58,7 @@ final readonly class EntityManagerProvider
 
         $configuration = new Configuration();
         $configuration->setMetadataDriverImpl($driver);
-        $configuration->setProxyDir($rootDir . '/var/proxies');
+        $configuration->setProxyDir($this->applicationContext->rootDir . '/var/proxies');
         $configuration->setProxyNamespace('DoctrineProxy');
 
         $connection = DriverManager::getConnection([
