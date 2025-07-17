@@ -66,7 +66,8 @@ final readonly class EntityInfo
          * base namespace: olml89\MyTheresa\Product\Domain
          */
         $namespace = $entityNode->getAttribute(qualifiedName: 'name');
-        $baseNamespace = substr($namespace, offset: 0, length: strrpos($namespace, needle: '\\') ?: null);
+        $lastSlashPosition = strrpos($namespace, needle: '\\');
+        $baseNamespace = substr($namespace, offset: 0, length: $lastSlashPosition === false ? null : $lastSlashPosition);
 
         return new self($name, $dirname, $baseNamespace);
     }

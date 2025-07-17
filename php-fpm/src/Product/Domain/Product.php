@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace olml89\MyTheresaTest\Product\Domain;
 
-final class Product
+use olml89\MyTheresaTest\Product\Domain\Discount\DiscountResolver;
+
+final readonly class Product
 {
     public function __construct(
-        public readonly string $sku,
+        public Sku $sku,
         public string $name,
         public Category $category,
-        public int $price,
+        private Price $price,
     ) {
+    }
+
+    public function price(DiscountResolver $discountResolver): Price
+    {
+        return $this->price->applyDiscount($discountResolver->resolveHighestDiscount($this));
     }
 }

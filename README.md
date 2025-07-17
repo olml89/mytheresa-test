@@ -97,4 +97,32 @@ make pint
 
 The first one has to be executed from inside `php-fpm`, the second one can be executed from the
 root of the project. Passing the `--test` flag (or `ci` option in the case of the Make recipe)
-will only check for errors; omitting it will actually **lint** the code.
+will only check for errors; omitting it will actually lint the code.
+
+## Testing
+
+[phpunit](https://github.com/sebastianbergmann/phpunit)
+and
+[mockery](https://github.com/mockery/mockery)
+are installed as the test suite. It has been used during development following a TDD approach, but also
+during CI. They have also been integrated with phpstan to ensure code analysis on the tests also.
+
+To run phpunit:
+
+```bash
+php vendor/bin/phpunit
+make phpstan
+```
+
+The first one has to be executed from inside `php-fpm`, the second one can be executed from the
+root of the project. Passing the `--coverage` flag (or `coverage` option in the case of the Make recipe)
+will output code coverage to the console. All the values that are added to the Make recipe will be parsed as
+`--filter` flag:
+
+```bash
+make phpstan Test1 Test2 Test3
+php vendor/bin/phpunit --filter="Test1|Test2|Test3"
+```
+
+# Logic decisions
+

@@ -6,6 +6,7 @@ namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
+use olml89\MyTheresaTest\Shared\Infrastructure\Console\CommandInfo;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -59,11 +60,16 @@ final class FixtureIterator extends IteratorIterator implements OuterIterator
         return $this->innerIterator->key();
     }
 
-    public function current(): ?FixtureInfo
+    public function current(): FixtureInfo
     {
         /** @var SplFileInfo $current $current */
         $current = $this->innerIterator->current();
 
+        /**
+         * We guarantee that it won't be null as we have called isValid() before
+         *
+         * @var FixtureInfo
+         */
         return FixtureInfo::create($current);
     }
 

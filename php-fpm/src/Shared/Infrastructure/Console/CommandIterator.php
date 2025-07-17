@@ -60,11 +60,16 @@ final class CommandIterator extends IteratorIterator implements OuterIterator
         return $this->innerIterator->key();
     }
 
-    public function current(): ?CommandInfo
+    public function current(): CommandInfo
     {
         /** @var SplFileInfo $current $current */
         $current = $this->innerIterator->current();
 
+        /**
+         * We guarantee that it won't be null as we have called isValid() before
+         *
+         * @var CommandInfo
+         */
         return CommandInfo::create($this->container, $current);
     }
 

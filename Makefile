@@ -82,7 +82,7 @@ phpstan:
 	$(foreach arg,$(ARGS),\
 		$(if $(filter ci,$(arg)),\
 			$(eval CI := --no-progress)))
-	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm vendor/bin/phpstan --ansi --configuration=phpstan.neon $(CI)
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm bin/phpstan.sh $(CI)
 
 pint:
 	$(eval ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS)))
@@ -91,6 +91,17 @@ pint:
 		$(if $(filter ci,$(arg)),\
 			$(eval CI := --test)))
 	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm vendor/bin/pint --ansi --config=pint.json $(CI)
+
+phpunit:
+	$(eval ARGS := $(filter-out $@,$(MAKECMDGOALS)))
+	$(eval FINAL_ARGS :=)
+	$(foreach arg,$(ARGS),\
+		$(if $(filter coverage,$(arg)),\
+			$(eval FINAL_ARGS += --coverage),\
+			$(eval FINAL_ARGS += --filter=$(arg))\
+		)\
+	)
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec -T php-fpm bin/phpunit.sh $(FINAL_ARGS)
 
 # Catch-all pattern rule to prevent Make from complaining about unknown targets
 %:

@@ -6,6 +6,7 @@ namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
+use olml89\MyTheresaTest\Shared\Infrastructure\Console\CommandInfo;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -52,11 +53,16 @@ final class TypeIterator extends IteratorIterator implements OuterIterator
         return $this->innerIterator->key();
     }
 
-    public function current(): ?TypeInfo
+    public function current(): TypeInfo
     {
         /** @var SplFileInfo $current $current */
         $current = $this->innerIterator->current();
 
+        /**
+         * We guarantee that it won't be null as we have called isValid() before
+         *
+         * @var TypeInfo
+         */
         return TypeInfo::create($current);
     }
 

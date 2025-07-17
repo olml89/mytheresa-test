@@ -13,7 +13,7 @@ trait ItGetsFullQualifiedClassName
 {
     private static function getFullQualifiedClassName(string $path): ?string
     {
-        if (is_null($code = file_get_contents($path) ?: null)) {
+        if (($code = file_get_contents($path)) === false) {
             return null;
         }
 

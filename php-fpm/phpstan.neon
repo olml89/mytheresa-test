@@ -1,3 +1,10 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+    # Used to properly inspect unit tests
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
+
 parameters:
     level: max
     inferPrivatePropertyTypeFromConstructor: true
@@ -16,3 +23,4 @@ parameters:
     paths:
         - bin
         - src
+        - tests
