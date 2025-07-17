@@ -7,6 +7,8 @@ namespace olml89\MyTheresaTest\Product\Domain;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use olml89\MyTheresaTest\Product\Domain\Discount\Discount;
+use olml89\MyTheresaTest\Product\Domain\Price\DiscountedPrice;
+use olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice;
 
 final class Product
 {
@@ -17,7 +19,7 @@ final class Product
         private readonly Sku $sku,
         private string $name,
         private Category $category,
-        private Price $price,
+        private OriginalPrice $price,
     ) {
         $this->discounts = new ArrayCollection();
     }
@@ -51,7 +53,12 @@ final class Product
         return $this;
     }
 
-    public function price(): Price
+    public function price(): OriginalPrice
+    {
+        return $this->price;
+    }
+
+    public function discountedPrice(): DiscountedPrice
     {
         $highestDiscount = $this->discounts->reduce(
             function (?Discount $item, Discount $carry): Discount {
@@ -59,10 +66,10 @@ final class Product
             },
         );
 
-        return $this->price->apply($highestDiscount);
+        return new DiscountedPrice($this->price, $highestDiscount);
     }
 
-    public function setPrice(Price $price): self
+    public function setPrice(OriginalPrice $price): self
     {
         $this->price = $price;
 

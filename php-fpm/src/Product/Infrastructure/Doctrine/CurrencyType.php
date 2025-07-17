@@ -8,7 +8,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\StringType;
-use olml89\MyTheresaTest\Product\Domain\Currency;
+use olml89\MyTheresaTest\Product\Domain\Price\Currency;
 use Throwable;
 
 final class CurrencyType extends StringType

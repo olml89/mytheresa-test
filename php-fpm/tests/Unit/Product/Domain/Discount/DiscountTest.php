@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Product\Discount;
+namespace Tests\Unit\Product\Domain\Discount;
 
-use olml89\MyTheresaTest\Product\Domain\Currency;
 use olml89\MyTheresaTest\Product\Domain\Discount\Discount;
 use olml89\MyTheresaTest\Product\Domain\Discount\Percentage\Percentage;
-use olml89\MyTheresaTest\Product\Domain\Price;
+use olml89\MyTheresaTest\Product\Domain\Price\Currency;
+use olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -16,31 +16,31 @@ use PHPUnit\Framework\TestCase;
 final class DiscountTest extends TestCase
 {
     /**
-     * @return array<int, array{Price, Percentage, Price}>
+     * @return array<int, array{OriginalPrice, Percentage, OriginalPrice}>
      */
     public static function providePrices(): array
     {
         return [
             [
-                new Price(100, Currency::EUR),
+                new OriginalPrice(100, Currency::EUR),
                 new Percentage(0),
-                new Price(0, Currency::EUR),
+                new OriginalPrice(0, Currency::EUR),
             ],
             [
-                new Price(100, Currency::EUR),
+                new OriginalPrice(100, Currency::EUR),
                 new Percentage(100),
-                new Price(100, Currency::EUR),
+                new OriginalPrice(100, Currency::EUR),
             ],
             [
-                new Price(100, Currency::EUR),
+                new OriginalPrice(100, Currency::EUR),
                 new Percentage(15),
-                new Price(15, Currency::EUR),
+                new OriginalPrice(15, Currency::EUR),
             ],
         ];
     }
 
     #[DataProvider('providePrices')]
-    public function testItAppliesToPrice(Price $price, Percentage $discountPercentage, Price $expectedPrice): void
+    public function testItAppliesToPrice(OriginalPrice $price, Percentage $discountPercentage, OriginalPrice $expectedPrice): void
     {
         $discount = DiscountFactory::create(percentage: $discountPercentage);
         $result = $discount->price($price);

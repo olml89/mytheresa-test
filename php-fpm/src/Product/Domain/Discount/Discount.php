@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace olml89\MyTheresaTest\Product\Domain\Discount;
 
 use olml89\MyTheresaTest\Product\Domain\Discount\Percentage\Percentage;
-use olml89\MyTheresaTest\Product\Domain\Price;
+use olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice;
+use olml89\MyTheresaTest\Product\Domain\Price\Price;
 use olml89\MyTheresaTest\Product\Domain\Product;
 use Ramsey\Uuid\UuidInterface;
 
@@ -66,11 +67,11 @@ final class Discount
     /**
      * Conceptually, this returns the price of the discount, that will be subtracted from a final price.
      */
-    public function price(Price $price): Price
+    public function price(Price $price): OriginalPrice
     {
-        return new Price(
-            original: $this->percentage->calculate($price->original),
-            currency: $price->currency,
+        return new OriginalPrice(
+            original: $this->percentage->calculate($price->value()),
+            currency: $price->currency(),
         );
     }
 

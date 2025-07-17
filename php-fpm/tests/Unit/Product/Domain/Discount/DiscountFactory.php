@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Product\Discount;
+namespace Tests\Unit\Product\Domain\Discount;
 
 use Faker\Factory;
 use Faker\Generator;
@@ -10,7 +10,7 @@ use olml89\MyTheresaTest\Product\Domain\Discount\Discount;
 use olml89\MyTheresaTest\Product\Domain\Discount\Percentage\Percentage;
 use olml89\MyTheresaTest\Product\Domain\Product;
 use Ramsey\Uuid\Uuid;
-use Tests\Unit\Product\ProductFactory;
+use Tests\Unit\Product\Helpers\ProductFactory;
 
 final class DiscountFactory
 {

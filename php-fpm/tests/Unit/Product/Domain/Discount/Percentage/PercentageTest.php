@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Product\Discount\Percentage;
+namespace Tests\Unit\Product\Domain\Discount\Percentage;
 
 use olml89\MyTheresaTest\Product\Domain\Discount\Percentage\InvalidPercentageException;
 use olml89\MyTheresaTest\Product\Domain\Discount\Percentage\Percentage;

@@ -49,27 +49,42 @@ final readonly class EntityInfo
 
         $xpath = new DOMXPath($doc);
         $xpath->registerNamespace('d', 'https://doctrine-project.org/schemas/orm/doctrine-mapping');
-        $entityNodes = $xpath->query(expression: '//d:entity');
 
-        if (!($entityNodes instanceof DOMNodeList) || $entityNodes->length === 0) {
-            return null;
+        if (!is_null($baseNamespace = self::getClassBaseNamespaceFromXmlAttribute($xpath))) {
+            return new self($name, $dirname, $baseNamespace);
         }
 
-        $entityNode = $entityNodes->item(index: 0);
+        return null;
+    }
 
-        if (!$entityNode instanceof DOMElement || !$entityNode->hasAttribute(qualifiedName: 'name')) {
-            return null;
+    private static function getClassBaseNamespaceFromXmlAttribute(DOMXPath $xpath): ?string
+    {
+        $xmlElementNames = ['entity', 'embeddable'];
+
+        foreach ($xmlElementNames as $xmlElementName) {
+            $entityNodes = $xpath->query(expression: sprintf('//d:%s', $xmlElementName));
+
+            if (!($entityNodes instanceof DOMNodeList) || $entityNodes->length === 0) {
+                continue;
+            }
+
+            $entityNode = $entityNodes->item(index: 0);
+
+            if (!$entityNode instanceof DOMElement || !$entityNode->hasAttribute(qualifiedName: 'name')) {
+                continue;
+            }
+
+            /**
+             * namespace of the class: olml89\MyTheresa\Product\Domain\Product
+             * base namespace: olml89\MyTheresa\Product\Domain
+             */
+            $namespace = $entityNode->getAttribute(qualifiedName: 'name');
+            $lastSlashPosition = strrpos($namespace, needle: '\\');
+
+            return substr($namespace, offset: 0, length: $lastSlashPosition === false ? null : $lastSlashPosition);
         }
 
-        /**
-         * namespace of the class: olml89\MyTheresa\Product\Domain\Product
-         * base namespace: olml89\MyTheresa\Product\Domain
-         */
-        $namespace = $entityNode->getAttribute(qualifiedName: 'name');
-        $lastSlashPosition = strrpos($namespace, needle: '\\');
-        $baseNamespace = substr($namespace, offset: 0, length: $lastSlashPosition === false ? null : $lastSlashPosition);
-
-        return new self($name, $dirname, $baseNamespace);
+        return null;
     }
 
     public function name(): string

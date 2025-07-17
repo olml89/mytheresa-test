@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Product;
+namespace Tests\Unit\Product\Helpers;
 
 use Faker\Factory;
 use Faker\Generator;
 use olml89\MyTheresaTest\Product\Domain\Category;
-use olml89\MyTheresaTest\Product\Domain\Currency;
-use olml89\MyTheresaTest\Product\Domain\Price;
+use olml89\MyTheresaTest\Product\Domain\Price\Currency;
+use olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice;
 use olml89\MyTheresaTest\Product\Domain\Product;
 use olml89\MyTheresaTest\Product\Domain\Sku;
 
@@ -26,10 +26,10 @@ final class ProductFactory
     }
 
     public static function create(
-        ?Sku $sku = null,
-        ?string $name = null,
-        ?Category $category = null,
-        ?Price $price = null,
+        ?Sku           $sku = null,
+        ?string        $name = null,
+        ?Category      $category = null,
+        ?OriginalPrice $price = null,
     ): Product {
         /** @var Category $category */
         $category = $category ?? self::faker()->randomElement(Category::cases());
@@ -38,7 +38,7 @@ final class ProductFactory
             sku: $sku ?? new Sku(self::faker()->numerify('######')),
             name: $name ?? self::faker()->sentence(),
             category: $category,
-            price: $price ?? new Price(self::faker()->numberBetween(100, 100000), Currency::EUR),
+            price: $price ?? new OriginalPrice(self::faker()->numberBetween(100, 100000), Currency::EUR),
         );
     }
 }

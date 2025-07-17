@@ -1,6 +1,5 @@
 <p align="center"><a href="https://www.mytheresa.com/" target="_blank"><img src="https://github.com/olml89/mytheresa-test/blob/main/php-fpm/public/img/mytheresa-logo-freelogovectors.net_.png" width="400" alt="Mytheresa"></a></p>
-[![CI](https://github.com/olml89/mytheresa-test/actions/workflows/ci.yml/badge.svg)]
-[![Coverage](https://codecov.io/gh/olml89/mytheresa-test/branch/main/graph/badge.svg?token=SL6ANXRH0A)](https://codecov.io/gh/olml89/mytheresa-test)
+[![CI](https://github.com/olml89/mytheresa-test/actions/workflows/ci.yml/badge.svg)](https://github.com/olml89/mytheresa-test/actions/workflows/ci.yml)[![Coverage](https://codecov.io/gh/olml89/mytheresa-test/branch/main/graph/badge.svg?token=SL6ANXRH0A)](https://codecov.io/gh/olml89/mytheresa-test)
 
 This is an implementation of technical test for a senior developer role at 
 [Mytheresa](https://www.mytheresa.com/), with the following

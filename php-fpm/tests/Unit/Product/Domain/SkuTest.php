@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Product;
+namespace Tests\Unit\Product\Domain;
 
 use olml89\MyTheresaTest\Product\Domain\InvalidSkuException;
 use olml89\MyTheresaTest\Product\Domain\Sku;

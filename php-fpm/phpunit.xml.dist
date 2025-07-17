@@ -24,6 +24,7 @@
 
     <source>
         <include>
+            <directory suffix=".php">src/Product/Application</directory>
             <directory suffix=".php">src/Product/Domain</directory>
         </include>
     </source>

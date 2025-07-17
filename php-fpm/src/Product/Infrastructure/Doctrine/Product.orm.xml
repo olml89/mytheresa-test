@@ -27,7 +27,7 @@
         />
         <embedded
                 name="price"
-                class="olml89\MyTheresaTest\Product\Domain\Price"
+                class="olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice"
                 column="price"
         />
         <one-to-many
