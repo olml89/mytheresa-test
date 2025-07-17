@@ -13,19 +13,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3.4.0
 
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+
       - name: Install composer and dependencies
-        uses: php-actions/composer@v6
+        run: composer install --no-interaction --no-progress
+        working-directory: ./php-fpm
 
       - name: Run PHPUnit
-        uses: php-actions/phpunit@master # php-actions/phpunit@v3 fails
+        run: vendor/bin/phpunit --coverage-clover var/phpunit/clover.xml
+        working-directory: ./php-fpm
         env:
           XDEBUG_MODE: coverage
-        with:
-          version: composer
-          php_version: 8.4
-          php_extensions: xdebug
-          configuration: phpunit.xml
-          coverage_clover: var/phpunit/clover.xml
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
@@ -41,17 +42,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3.4.0
 
-      - name: Install composer and dependencies
-        uses: php-actions/composer@v6
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
         with:
-          working_dir: ./php-fpm
+          php-version: 8.4
+
+      - name: Install composer and dependencies
+        run: composer install --no-interaction --no-progress
+        working-directory: ./php-fpm
 
       - name: Run PHPStan checks
-        uses: php-actions/phpstan@v3
-        with:
-          version: composer
-          php_version: 8.4
-          configuration: ./php-fpm/phpstan.neon
+        run: vendor/bin/phpstan analyse --no-progress
+        working-directory: ./php-fpm
 
   pint:
     runs-on: ubuntu-latest
@@ -60,13 +62,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3.4.0
 
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+
       - name: Install composer and dependencies
-        uses: php-actions/composer@v6
+        run: composer install --no-interaction --no-progress
+        working-directory: ./php-fpm
 
       - name: Run Laravel Pint
-        uses: sergotail/laravel-pint-action@v2.0.0
-        with:
-          useComposer: true
-          testMode: true
-          verboseMode: true
-          configPath: ./php-fpm/pint.json
+        run: vendor/bin/pint --test
+        working-directory: ./php-fpm

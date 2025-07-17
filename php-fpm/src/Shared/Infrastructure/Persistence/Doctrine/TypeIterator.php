@@ -6,7 +6,6 @@ namespace olml89\MyTheresaTest\Shared\Infrastructure\Persistence\Doctrine;
 
 use FilesystemIterator;
 use IteratorIterator;
-use olml89\MyTheresaTest\Shared\Infrastructure\Console\CommandInfo;
 use OuterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

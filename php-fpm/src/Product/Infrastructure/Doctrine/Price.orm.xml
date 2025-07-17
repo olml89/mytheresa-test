@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <embeddable
+            name="olml89\MyTheresaTest\Product\Domain\Price"
+    >
+        <field
+                name="original"
+                type="integer"
+                column="original"
+                nullable="false"
+        />
+        <field
+                name="currency"
+                type="CurrencyType"
+                column="currency"
+                length="3"
+                nullable="false"
+        />
+    </embeddable>
+</doctrine-mapping>

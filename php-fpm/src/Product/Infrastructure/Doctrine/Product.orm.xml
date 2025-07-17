@@ -25,11 +25,21 @@
                 length="50"
                 nullable="false"
         />
-        <field
+        <embedded
                 name="price"
-                type="integer"
+                class="olml89\MyTheresaTest\Product\Domain\Price"
                 column="price"
-                nullable="false"
         />
+        <one-to-many
+                field="discounts"
+                target-entity="olml89\MyTheresaTest\Product\Domain\Discount\Discount"
+                mapped-by="product"
+                orphan-removal="true"
+        >
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
     </entity>
 </doctrine-mapping>

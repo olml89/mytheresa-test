@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity
+            name="olml89\MyTheresaTest\Product\Domain\Discount\Discount"
+            table="discounts"
+    >
+        <id
+                name="id"
+                column="id"
+                type="uuid"
+        />
+
+        <field
+                name="name"
+                column="name"
+                type="string"
+        />
+
+        <field
+                name="percentage"
+                column="percentage"
+                type="PercentageType"
+        />
+
+        <many-to-one
+                field="product"
+                target-entity="olml89\MyTheresaTest\Product\Domain\Product"
+                inversed-by="discounts"
+        >
+            <join-column
+                    name="product_sku"
+                    referenced-column-name="sku"
+                    nullable="false"
+            />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

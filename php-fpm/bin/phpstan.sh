@@ -13,7 +13,7 @@ while [ "$1" != "" ]; do
 	shift
 done
 
-echo "🔍 Running phpunit..."
+echo "🔍 Running phpstan..."
 
 if $CI; then
 	NO_PROGRESS_FLAG="--no-progress"

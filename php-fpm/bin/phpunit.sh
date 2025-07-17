@@ -25,8 +25,7 @@ while [ "$1" != "" ]; do
 done
 
 echo "🔍 Running phpunit..."
-
-$FLAGS = ""
+FLAGS=""
 
 if [ -n "$FILTER" ]; then
 	FILTER_REGEX=$(echo "$FILTER" | sed 's/ /|/g')

@@ -11,21 +11,28 @@ final readonly class Price
     public function __construct(
         public int $original,
         public Currency $currency,
-        public ?Discount $discount = null,
     ) {
+        if ($this->original < 0) {
+            throw new InvalidPriceException($this->original);
+        }
     }
 
-    public function applyDiscount(?Discount $discount): self
+    /**
+     * Conceptually, when we apply a 30% discount to a 100 EUR price, we are left with:
+     * 30 EUR, the actual discount
+     * 70 EUR, the final price.
+     *
+     * So in ubiquitous language, discount is the term applied to the reduced part stripped off the final price.
+     */
+    public function apply(?Discount $discount): self
     {
-        return new self($this->original, $this->currency, $discount);
-    }
-
-    public function calculate(): int
-    {
-        if (is_null($this->discount)) {
-            return $this->original;
+        if (is_null($discount)) {
+            return $this;
         }
 
-        return $this->original - $this->discount->apply($this);
+        return new self(
+            original: $this->original - $discount->price($this)->original,
+            currency: $this->currency,
+        );
     }
 }

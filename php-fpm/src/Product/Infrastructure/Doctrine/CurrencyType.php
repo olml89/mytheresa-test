@@ -8,33 +8,33 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Exception\InvalidType;
 use Doctrine\DBAL\Types\Exception\ValueNotConvertible;
 use Doctrine\DBAL\Types\StringType;
-use olml89\MyTheresaTest\Product\Domain\Sku;
+use olml89\MyTheresaTest\Product\Domain\Currency;
 use Throwable;
 
-final class SkuType extends StringType
+final class CurrencyType extends StringType
 {
     /**
      * @throws InvalidType
      */
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): string
     {
-        if (!($value instanceof Sku)) {
+        if (!($value instanceof Currency)) {
             throw InvalidType::new(
                 value: $value,
                 toType: self::class,
                 possibleTypes: [
-                    Sku::class,
+                    Currency::class,
                 ],
             );
         }
 
-        return (string)$value;
+        return $value->value;
     }
 
     /**
      * @throws ValueNotConvertible
      */
-    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): Sku
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): Currency
     {
         if (!is_string($value)) {
             throw ValueNotConvertible::new(
@@ -44,7 +44,7 @@ final class SkuType extends StringType
         }
 
         try {
-            return new Sku($value);
+            return Currency::from($value);
         } catch (Throwable $e) {
             throw ValueNotConvertible::new(
                 value: $value,

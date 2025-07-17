@@ -10,7 +10,7 @@ final readonly class Percentage
      * @throws InvalidPercentageException
      */
     public function __construct(
-        private int $value,
+        public int $value,
     ) {
         if ($this->value < 0) {
             throw InvalidPercentageException::negative($this->value);
@@ -19,6 +19,11 @@ final readonly class Percentage
         if ($this->value > 100) {
             throw InvalidPercentageException::tooBig($this->value);
         }
+    }
+
+    public function greaterThan(Percentage $percentage): bool
+    {
+        return $this->value > $percentage->value;
     }
 
     public function calculate(int $value): int

@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver;
 use olml89\MyTheresaTest\Shared\Domain\ApplicationContext;
 use olml89\MyTheresaTest\Shared\Infrastructure\Persistence\DatabaseConfig;
+use Ramsey\Uuid\Doctrine\UuidType;
 
 final readonly class EntityManagerProvider
 {
@@ -29,6 +30,13 @@ final readonly class EntityManagerProvider
      */
     public function provide(): EntityManagerInterface
     {
+        /**
+         * Manually add UUID type
+         */
+        if (!Type::hasType('uuid')) {
+            Type::addType('uuid', UuidType::class);
+        }
+
         /**
          * Add custom types
          */
