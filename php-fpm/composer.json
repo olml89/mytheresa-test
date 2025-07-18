@@ -25,7 +25,9 @@
         "symfony/console": "^7.3",
         "nikic/php-parser": "^5.5",
         "ramsey/uuid": "^4.9",
-        "ramsey/uuid-doctrine": "^2.1"
+        "ramsey/uuid-doctrine": "^2.1",
+        "slim/slim": "^4.0",
+        "slim/psr7": "^1.7"
     },
     "require-dev": {
         "doctrine/data-fixtures": "^2.0",

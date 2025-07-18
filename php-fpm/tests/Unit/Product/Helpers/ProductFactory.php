@@ -26,9 +26,9 @@ final class ProductFactory
     }
 
     public static function create(
-        ?Sku           $sku = null,
-        ?string        $name = null,
-        ?Category      $category = null,
+        ?Sku $sku = null,
+        ?string $name = null,
+        ?Category $category = null,
         ?OriginalPrice $price = null,
     ): Product {
         /** @var Category $category */

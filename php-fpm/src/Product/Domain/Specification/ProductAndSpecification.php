@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace olml89\MyTheresaTest\Product\Domain\Specification;
 
 use olml89\MyTheresaTest\Product\Domain\Product;
+use olml89\MyTheresaTest\Shared\Domain\Criteria\CompositeExpression\AndExpression;
+use olml89\MyTheresaTest\Shared\Domain\Criteria\Criteria;
+use olml89\MyTheresaTest\Shared\Domain\Criteria\Expression;
 
 final readonly class ProductAndSpecification implements ProductSpecification
 {
@@ -23,6 +26,18 @@ final readonly class ProductAndSpecification implements ProductSpecification
         return array_all(
             $this->specifications,
             fn (ProductSpecification $specification): bool => $specification->isSatisfiedBy($product),
+        );
+    }
+
+    public function criteria(): Criteria
+    {
+        return new Criteria(
+            expression: new AndExpression(
+                ...array_map(
+                    fn (ProductSpecification $specification): Expression => $specification->criteria()->expression,
+                    $this->specifications,
+                ),
+            ),
         );
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManagerInterface;
+use olml89\MyTheresaTest\Product\Domain\ProductRepository;
+use olml89\MyTheresaTest\Product\Infrastructure\Doctrine\ProductDoctrineRepository;
 use olml89\MyTheresaTest\Shared\Domain\ApplicationContext;
 use olml89\MyTheresaTest\Shared\Domain\Environment;
 use olml89\MyTheresaTest\Shared\Domain\EnvironmentLoader;
@@ -49,7 +51,9 @@ $containerBuilder->addDefinitions([
         $entityManagerProvider = $container->get(EntityManagerProvider::class);
 
         return $entityManagerProvider->provide();
-    })
+    }),
+
+    ProductRepository::class => DI\autowire(ProductDoctrineRepository::class),
 
 ]);
 

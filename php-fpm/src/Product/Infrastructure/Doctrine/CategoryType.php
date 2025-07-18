@@ -18,17 +18,26 @@ final class CategoryType extends StringType
      */
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): string
     {
-        if (!($value instanceof Category)) {
-            throw InvalidType::new(
-                value: $value,
-                toType: self::class,
-                possibleTypes: [
-                    Category::class,
-                ],
-            );
+        if ($value instanceof Category) {
+            return $value->value;
         }
 
-        return $value->value;
+        /**
+         * This is needed because of how Doctrine manages Backed Enums.
+         * If we need a stricter control, use ValueObjects implementing Stringable.
+         */
+        if (is_string($value)) {
+            return $value;
+        }
+
+        throw InvalidType::new(
+            value: $value,
+            toType: self::class,
+            possibleTypes: [
+                Category::class,
+                'string',
+            ],
+        );
     }
 
     /**

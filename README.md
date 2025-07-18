@@ -21,30 +21,25 @@ allowing live code reloading as we are developing.
 `postgres` has been chosen as the persistence layer, taking into account the requirement to 
 support large loads of data and possibly high traffic.
 
-# Architectural decisions
-
 I have tried to follow mostly a DDD pattern, not tied to any framework in particular.
 
 In the infrastructure layer, I decided to use
 [php-di](https://github.com/PHP-DI/PHP-DI)
 as the injection container,
 [doctrine-orm](https://github.com/doctrine/orm) 
-as the data abstraction layer, symfony components to handle input and output 
-(
-[symfony/http-kernel](https://github.com/symfony/http-kernel), 
-[symfony/console](https://github.com/symfony/console)).
-
-I have implemented a custom `EntityManagerProvider` to automatically resolve an instance of the Doctrine entity manager
-with my custom types. Both the types and the mappings will be resolved with no configuration involved
-thanks to `EntityIterator` and `TypeIterator`, that automatically inject mappings and types to the entity manager.
-There's also a `FixtureIterator` that does the same with fixtures.
+as the data abstraction layer, and
+[slim](https://github.com/slimphp/Slim)
+to handle HTTP requests and responses.
+I have also used 
+[symfony/console](https://github.com/symfony/console))
+to make a custom command to apply fixtures to the database.
 
 # Installation
 
 ## Dependencies
 
 On production, the dependencies are built during the build phase and already deployed
-into the container. On development, after setting the containers up, we have
+into the container, so it should be ready to run by default. On development, after setting the containers up, we have
 to log into the `php-fpm` container and run:
 
 ```bash
@@ -68,7 +63,20 @@ I have implemented a `ProductFixture`. This command will run that and also all t
 php bin/console.php load:fixtures
 ```
 
-## Development
+There's a single command that unifies all the previous steps, so the application is installable and ready to run
+on deployment with a single command:
+
+```bash
+make install
+```
+
+There's a `.env.example` file at the root of the application and another one at the root of the `php-fpm` service.
+The first one describes the needed variables to orchestrate the application and debug it on development.
+The second one contains basically the skeleton of the database credentials. You have to fill the corresponding
+`.env` files with those variables to run the application on development. On production not all of them are needed,
+and they should be kept in a secrets vault.
+
+## Development and testing
 
 I have
 [phpstan](https://github.com/phpstan/phpstan)
@@ -99,19 +107,16 @@ The first one has to be executed from inside `php-fpm`, the second one can be ex
 root of the project. Passing the `--test` flag (or `ci` option in the case of the Make recipe)
 will only check for errors; omitting it will actually lint the code.
 
-## Testing
 
 [phpunit](https://github.com/sebastianbergmann/phpunit)
-and
-[mockery](https://github.com/mockery/mockery)
-are installed as the test suite. It has been used during development following a TDD approach, but also
-during CI. They have also been integrated with phpstan to ensure code analysis on the tests also.
+has been used during development following a TDD approach, and is used
+during the CI pipeline too. I have integrated it with phpstan to ensure proper code analysis also on the tests.
 
 To run phpunit:
 
 ```bash
 php vendor/bin/phpunit
-make phpstan
+make phpunit
 ```
 
 The first one has to be executed from inside `php-fpm`, the second one can be executed from the
@@ -125,4 +130,38 @@ php vendor/bin/phpunit --filter="Test1|Test2|Test3"
 ```
 
 # Logic decisions
+
+I didn't want to use a full-fledged framework, and I chose to build the application gluing together small
+pieces as I think it is more suited to show the problem-resolution skills in a technical test. Also, it is
+a lot more fun.
+
+I have implemented a custom `EntityManagerProvider` to automatically resolve an instance of the Doctrine entity manager
+with my custom value object types. Both the types and the mappings will be resolved with no configuration involved
+thanks to `EntityIterator` and `TypeIterator`, that automatically inject mappings and types to the entity manager
+discovering the necessary classes based on their namespaces. 
+There's also a `FixtureIterator` that does the same with fixtures.
+I would have done the same with console commands if I had more time.
+
+Another thing I'd have liked to do following this line of thinking is to develop real request object generic DTO's, 
+similar to the ones that exist on Symfony, injecting the query or payload parameters instead of
+having to recover them from the request by myself. However, at that point, I didn't want to 
+spend more time developing the infrastructure than the domain logic.
+
+I have developed a Specification pattern filtering based mechanism, that translates options filtered on the query strings
+to the DoctrineCriteria used to resolve searched on the database. That was my solution to the classic DDD problem
+of maintaining the separation of boundaries while allowing wide searches to be performed on a repository. The only issue
+is that it only allows conditions to be successively added to the query, at the moment we need to allow OR clauses
+this approach won't work unless we implement something like OData filtering on the uri (which, by the way, is a
+solution I'm trying to port PHP from .NET on this 
+[OData parser](https://github.com/olml89/odata-parser).
+
+The tests I've written are unit-scoped: I made a conscious decision not to test the infrastructure layer, 
+as it's too complex for a technical assessment. In a real world scenario, I would have used only
+battle-tested and ready available solutions instead of developing a small customised framework, 
+so if I needed to implement something by myself because nothing else cut it, the infrastructural scope to 
+test would be as little as possible. So, the tests have been conducted
+in the Product aggregate, both in the domain and application layers.
+
+Another thing I have omitted for the sake of simplification is logging and error handling, as I think it would be too
+cumbersome too.
 

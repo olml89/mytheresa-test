@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Product\Application;
 
 use olml89\MyTheresaTest\Product\Application\Filter;
-use olml89\MyTheresaTest\Product\Application\ListUseCase;
+use olml89\MyTheresaTest\Product\Application\ListProductsUseCase;
 use olml89\MyTheresaTest\Product\Domain\Category;
 use olml89\MyTheresaTest\Product\Domain\Price\Currency;
 use olml89\MyTheresaTest\Product\Domain\Price\OriginalPrice;
@@ -20,14 +20,14 @@ use PHPUnit\Framework\TestCase;
 use Tests\Unit\Product\Helpers\InMemoryProductRepository;
 use Tests\Unit\Product\Helpers\ProductFactory;
 
-#[CoversClass(ListUseCase::class)]
-final class ListUseCaseTest extends TestCase
+#[CoversClass(ListProductsUseCase::class)]
+final class ListProductsUseCaseTest extends TestCase
 {
-    private function createListUseCase(Product ...$products): ListUseCase
+    private function createListUseCase(Product ...$products): ListProductsUseCase
     {
         $productRepository = new InMemoryProductRepository(...$products);
 
-        return new ListUseCase($productRepository);
+        return new ListProductsUseCase($productRepository);
     }
 
     /**
@@ -48,7 +48,7 @@ final class ListUseCaseTest extends TestCase
                 new Filter(),
                 array_slice($productFixtureProducts, offset: 0, length: Filter::MAX_LIMIT),
             ],
-            'products filtered by category' => (function(): array {
+            'products filtered by category' => (function (): array {
                 $boots = ProductFactory::create(category: Category::Boots);
                 $sandals = ProductFactory::create(category: Category::Sandals);
                 $sneakers = ProductFactory::create(category: Category::Sneakers);
@@ -65,7 +65,7 @@ final class ListUseCaseTest extends TestCase
                     ],
                 ];
             })(),
-            'products filtered by price' => (function(): array {
+            'products filtered by price' => (function (): array {
                 $price150 = ProductFactory::create(price: new OriginalPrice(150, Currency::EUR));
                 $price151 = ProductFactory::create(price: new OriginalPrice(151, Currency::EUR));
                 $price152 = ProductFactory::create(price: new OriginalPrice(152, Currency::EUR));
@@ -85,7 +85,7 @@ final class ListUseCaseTest extends TestCase
                     ],
                 ];
             })(),
-            'products filtered by category and price' => (function(): array {
+            'products filtered by category and price' => (function (): array {
                 $cheapBoots = ProductFactory::create(
                     category: Category::Boots,
                     price: new OriginalPrice(150, Currency::EUR),

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace olml89\MyTheresaTest\Product\Domain\Discount\Percentage;
 
-final readonly class Percentage
+use Stringable;
+
+final readonly class Percentage implements Stringable
 {
     /**
      * @throws InvalidPercentageException
@@ -29,5 +31,10 @@ final readonly class Percentage
     public function calculate(int $value): int
     {
         return (int)($value * $this->value / 100);
+    }
+
+    public function __toString(): string
+    {
+        return $this->value . '%';
     }
 }

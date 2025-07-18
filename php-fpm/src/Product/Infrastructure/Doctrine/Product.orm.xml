@@ -6,7 +6,7 @@
     >
         <id
                 name="sku"
-                type="string"
+                type="SkuType"
                 column="sku"
         >
             <generator strategy="NONE"/>

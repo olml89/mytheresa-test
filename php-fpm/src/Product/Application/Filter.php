@@ -10,17 +10,12 @@ final readonly class Filter
 {
     public const int MAX_LIMIT = 5;
 
-    public function __construct(
-        public int $limit = self::MAX_LIMIT,
-        public ?ProductSpecification $specification = null,
-    ) {
-    }
+    public int $limit;
+    public ?ProductSpecification $specification;
 
-    public function sanitize(): self
+    public function __construct(?int $limit = null, ?ProductSpecification $specification = null)
     {
-        return new self(
-            limit: $this->limit < 1 || $this->limit > self::MAX_LIMIT ? self::MAX_LIMIT : $this->limit,
-            specification: $this->specification,
-        );
+        $this->limit = is_null($limit) || $limit < 1 || $limit > self::MAX_LIMIT ? self::MAX_LIMIT : $limit;
+        $this->specification = $specification;
     }
 }

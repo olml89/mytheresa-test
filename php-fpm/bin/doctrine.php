@@ -9,7 +9,7 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Symfony\Component\Console\Application;
 
 /** @var Container $container */
-$container = require 'bootstrap.php';
+$container = require dirname(__DIR__) . '/bootstrap/bootstrap.php';
 
 /** @var EntityManagerInterface $entityManager */
 $entityManager = $container->get(EntityManagerInterface::class);

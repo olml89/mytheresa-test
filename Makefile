@@ -74,7 +74,12 @@ postgres:
 
 
 # Development
-.PHONY: phpstan pint
+.PHONY: install phpstan pint phpunit
+
+install:
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec php-fpm composer install
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec php-fpm php bin/doctrine.php orm:schema:create
+	docker-compose $(DOCKER_COMPOSE) $(ENV) exec php-fpm php bin/console.php load:fixtures
 
 phpstan:
 	$(eval ARGS := $(wordlist 2, $(words $(MAKECMDGOALS)), $(MAKECMDGOALS)))

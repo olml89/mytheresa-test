@@ -7,7 +7,7 @@ use olml89\MyTheresaTest\Shared\Infrastructure\Console\CommandIterator;
 use Symfony\Component\Console\Application;
 
 /** @var Container $container */
-$container = require 'bootstrap.php';
+$container = require dirname(__DIR__) . '/bootstrap/bootstrap.php';
 
 /** @var CommandIterator $commandIterator */
 $commandIterator = $container->get(CommandIterator::class);

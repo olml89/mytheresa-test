@@ -30,7 +30,7 @@ services:
       - mytheresa-test-network
 
   postgres:
-    container_name: mytheresa_test_network
+    container_name: mytheresa_test_postgres
     image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DB_NAME}
