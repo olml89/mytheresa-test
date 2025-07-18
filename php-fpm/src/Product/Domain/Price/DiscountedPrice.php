@@ -13,7 +13,7 @@ final readonly class DiscountedPrice implements Price
 
     public function __construct(
         private OriginalPrice $original,
-        public ?Discount $discount,
+        private ?Discount $discount,
     ) {
         $this->validatePrice($this->original());
     }

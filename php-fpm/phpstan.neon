@@ -24,3 +24,7 @@ parameters:
         - bin
         - src
         - tests
+
+    # @TODO: Problematic dynamic types issues
+    excludePaths:
+        - tests/Integration

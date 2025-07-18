@@ -2,34 +2,9 @@
 
 declare(strict_types=1);
 
-use DI\Container;
-use olml89\MyTheresaTest\Product\Infrastructure\Http\ListProductsController;
-use olml89\MyTheresaTest\Product\Infrastructure\Http\ListProductsRequest;
-use Psr\Http\Message\ResponseInterface;
-use Slim\Factory\AppFactory;
-use Slim\Psr7\Request;
-use Slim\Psr7\Response;
+use Slim\App;
 
-/** @var Container $container */
-$container = require dirname(__DIR__) . '/bootstrap/bootstrap.php';
+/** @var App $app */
+$app = require dirname(__DIR__) . '/bootstrap/app.php';
 
-// Setup container
-AppFactory::setContainer($container);
-$app = AppFactory::create();
-
-// Configurate routes
-$app->get(
-    pattern: '/products',
-    callable: function (Request $request, Response $response) use ($container): ResponseInterface {
-        return ($container->get(ListProductsController::class))(new ListProductsRequest($request), $response);
-    },
-);
-
-// Run app
-try {
-    $app->run();
-} catch (\Exception $e) {
-    $a = 1;
-    $b = 2;
-    throw $e;
-}
+$app->run();

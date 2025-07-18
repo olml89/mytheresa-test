@@ -29,6 +29,7 @@ final readonly class ListProductsController
         );
 
         $products = $this->listProductsUseCase->list($filter);
+
         $response
             ->getBody()
             ->write(json_encode(new ProductsPresenter(...$products), flags: JSON_THROW_ON_ERROR));

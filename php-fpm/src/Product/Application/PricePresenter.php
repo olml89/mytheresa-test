@@ -24,7 +24,7 @@ final readonly class PricePresenter implements JsonSerializable, Stringable
     {
         $this->original = $price->original();
         $this->final = $price->value();
-        $this->discount_percentage = $price->discount?->percentage()->__toString();
+        $this->discount_percentage = $price->percentageDiscount()?->__toString();
         $this->currency = $price->currency()->value;
     }
 }

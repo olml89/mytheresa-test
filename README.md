@@ -155,12 +155,15 @@ this approach won't work unless we implement something like OData filtering on t
 solution I'm trying to port PHP from .NET on this 
 [OData parser](https://github.com/olml89/odata-parser).
 
-The tests I've written are unit-scoped: I made a conscious decision not to test the infrastructure layer, 
+The tests I've written are mainly unit-scoped: I made a conscious decision not to test the infrastructure layer, 
 as it's too complex for a technical assessment. In a real world scenario, I would have used only
 battle-tested and ready available solutions instead of developing a small customised framework, 
 so if I needed to implement something by myself because nothing else cut it, the infrastructural scope to 
 test would be as little as possible. So, the tests have been conducted
-in the Product aggregate, both in the domain and application layers.
+in the Product aggregate, both in the domain and application layers, but I have also conducted an integration test
+against the `/products` endpoint; however, I'm not really testing it against a real database because the specifications
+of the technical assessment said the tests shouldn't require any networking or the filesystem, so I assumed it
+was fine if I just mocked it.
 
 Another thing I have omitted for the sake of simplification is logging and error handling, as I think it would be too
 cumbersome too.
